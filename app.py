@@ -46,6 +46,21 @@ app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
+# Define a function to create a spectrogram of an audio file
+def create_spectogram(audio_file_name, source_path, save_path):
+    x, sr = librosa.load(source_path + audio_file_name)
+    X = librosa.stft(x)
+    Xdb = librosa.amplitude_to_db(abs(X))
+    plt.figure(figsize=(14, 5))
+    librosa.display.specshow(Xdb, sr=sr, y_axis='hz')
+    plt.ylabel('')
+    plt.axis('off')
+    file_name = audio_file_name.replace('.wav', '')
+    plt.savefig('static/' + file_name + '.jpg', bbox_inches='tight', pad_inches=0)
+    plt.close()
+
+
+
 # Define a function to predict the category of an audio file
 def predict_audio_category(audio_file_path):
     # Create spectrogram of the audio
